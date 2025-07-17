@@ -5,3 +5,4 @@ httpx
 transformers
 torch # Or tensorflow if you prefer TF models for LLM
 pydantic
+python-dotenv
