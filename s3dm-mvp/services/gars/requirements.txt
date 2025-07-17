@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+# bitsandbytes  # Uncomment if you want 4-bit quantization
