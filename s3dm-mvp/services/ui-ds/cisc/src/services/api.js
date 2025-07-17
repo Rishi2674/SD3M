@@ -1,7 +1,7 @@
 // This is a conceptual API service. In a real application, you'd replace
 // these with actual fetch/axios calls to your backend endpoints.
 
-const API_BASE_URL = 'http://localhost:3000/api/customer'; // Replace with your actual backend URL
+const API_BASE_URL = 'http://localhost:8000/submit/tickets'; // Replace with your actual backend URL
 
 export const reportNewIssue = async (issueData) => {
   console.log('Reporting issue to backend:', issueData);
@@ -11,7 +11,7 @@ export const reportNewIssue = async (issueData) => {
     status: 'Received',
     message: 'Issue successfully reported.'
   }), 1000));
-  /*
+  
   const response = await fetch(`${API_BASE_URL}/issues`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -21,7 +21,7 @@ export const reportNewIssue = async (issueData) => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   return response.json();
-  */
+  
 };
 
 export const getMyTickets = async () => {
@@ -159,3 +159,26 @@ export const getDataAgreements = async (ticketId) => {
   return response.json();
   */
 };
+
+export async function sendChatMessage(messageText) {
+  const response = await fetch('/tickets/submit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_message: messageText,
+      device_type: 'chatbot',
+      issue_type: 'general',
+      location: 'chat',
+      brand: 'n/a',
+      model: 'n/a',
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Server error: ${response.statusText}`);
+  }
+
+  return await response.json();
+}

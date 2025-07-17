@@ -20,7 +20,7 @@ app = FastAPI(
     description="Centralized API for Smart Home Device Maintenance (Fellowship of the Cogs).",
     version="1.0.0"
 )
-app.mount("/ui", StaticFiles(directory="services/ui-ds", html=True), name="static_ui")
+app.mount("/ui", StaticFiles(directory="services/ui-ds/cisc/build", html=True), name="static_ui")
 
 # --- Application Lifecycle Events ---
 @app.on_event("startup")

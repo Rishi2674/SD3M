@@ -63,6 +63,7 @@ function Header() {
               cursor: 'pointer',
               transition: 'all 0.3s ease',
               fontSize: '14px'
+              
             }}
               onMouseOver={(e) => {
                 e.target.style.background = 'rgba(255, 255, 255, 0.3)';

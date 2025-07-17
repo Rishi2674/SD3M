@@ -6,44 +6,48 @@ const issueTypes = ["functionality", "connectivity", "power", "security", "perfo
 const deviceTypes = ["smart_light", "smart_lock", "thermostat", "camera", "speaker", "sensor", "hub", "switch", "outlet"];
 const locations = ["living_room", "bedroom", "kitchen", "bathroom", "garage", "outdoor", "hallway", "basement", "attic", "office"];
 
+
+
 function ReportIssuePage() {
-  const [description, setDescription] = useState('');
-  const [deviceType, setDeviceType] = useState('');
-  const [issueType, setIssueType] = useState('');
-  const [location, setLocation] = useState('');
-  const [brand, setBrand] = useState('');
-  const [model, setModel] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
+  
+  
+  
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      // In a real app, you'd send more structured data or let the backend extract
-      const issueData = {
-        user_message: description,
-        device_type: deviceType,
-        issue_type: issueType,
-        location: location,
-        brand: brand,
-        model: model,
-        // ... other fields from build_exhaustive_prompt if collected directly
-      };
-
-      const response = await reportNewIssue(issueData);
-      console.log('Issue reported successfully:', response);
-      alert(`Issue reported! Your Ticket ID: ${response.ticketId || 'N/A'}`);
-      navigate('/my-tickets'); // Redirect to tickets page
-    } catch (err) {
-      setError('Failed to report issue. Please try again.');
-      console.error('Error reporting issue:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const [description, setDescription] = useState('');
+    const [deviceType, setDeviceType] = useState('');
+    const [issueType, setIssueType] = useState('');
+    const [location, setLocation] = useState('');
+    const [brand, setBrand] = useState('');
+    const [model, setModel] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+      e.preventDefault();
+      setLoading(true);
+      setError(null);
+      try {
+        // In a real app, you'd send more structured data or let the backend extract
+        const issueData = {
+          user_message: description,
+          device_type: deviceType,
+          issue_type: issueType,
+          location: location,
+          brand: brand,
+          model: model,
+          // ... other fields from build_exhaustive_prompt if collected directly
+        };
+  
+        const response = await reportNewIssue(issueData);
+        console.log('Issue reported successfully:', response);
+        alert(`Issue reported! Your Ticket ID: ${response.ticketId || 'N/A'}`);
+        navigate('/my-tickets'); // Redirect to tickets page
+      } catch (err) {
+        setError('Failed to report issue. Please try again.');
+        console.error('Error reporting issue:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
@@ -138,3 +142,4 @@ function ReportIssuePage() {
 }
 
 export default ReportIssuePage;
+export { handleSubmit };

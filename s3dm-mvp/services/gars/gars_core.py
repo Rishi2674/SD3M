@@ -56,7 +56,7 @@ def create_agent_data(
     return {
         "name": name,
         "capabilities": capabilities,
-        "location": jurisdiction_country,
+        "jurisdiction_country": jurisdiction_country,
         "jurisdiction_city": jurisdiction_city,
         # "cost": cost,
         "trust_score": trust_score,

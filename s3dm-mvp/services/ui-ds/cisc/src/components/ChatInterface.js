@@ -1,4 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
+import { sendChatMessage } from '../services/api'; // or define this function inline if needed
+import React, {useRef, useEffect } from 'react';
+// import {handleSubmit} from '../pages/ReportIssuePage'; // Import your API function
 
 function ChatInterface() {
   const [messages, setMessages] = useState([
@@ -19,45 +22,64 @@ function ChatInterface() {
 
   useEffect(scrollToBottom, [messages]);
 
-  const handleSendMessage = async () => {
-    if (inputMessage.trim() === '') return;
+// reusing your API function
 
-    // Add user message
-    const userMessage = {
-      id: Date.now(),
-      text: inputMessage,
-      sender: 'user',
-      timestamp: new Date().toLocaleTimeString()
-    };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputMessage('');
-    setIsTyping(true);
 
-    // Simulate AI response with progress checking (replace with actual LLM integration later)
-    setTimeout(() => {
-      const aiResponse = {
-        id: Date.now() + 1,
-        text: `I understand your request: "${inputMessage}". Let me process this and check the progress...`,
-        sender: 'ai',
-        timestamp: new Date().toLocaleTimeString()
+    const handleSendMessage = async () => {
+      if (!inputMessage.trim()) return;
+
+      const userMessage = {
+        id: Date.now(),
+        text: inputMessage,
+        sender: 'user',
+        timestamp: new Date().toLocaleTimeString(),
       };
-      setMessages(prev => [...prev, aiResponse]);
 
-      // Automatically add progress check response
-      setTimeout(() => {
-        const progressResponse = {
-          id: Date.now() + 2,
-          text: "📈 Progress Check: Your request has been logged and is being processed. Current status: In Queue → Analysis → Response Generation. I'll provide you with a detailed response shortly!",
-          sender: 'ai',
-          timestamp: new Date().toLocaleTimeString(),
-          isProgress: true
-        };
-        setMessages(prev => [...prev, progressResponse]);
+      setMessages((prev) => [...prev, userMessage]);
+      setInputMessage('');
+      setIsTyping(true);
+
+      try {
+        const response = await sendChatMessage(inputMessage); // call backend
+        console.log('Backend response:', response);
+        const workflowSteps = response.planned_workflow?.map((step, index) => {
+        return `${index + 1}. 👤 ${step.assigned_agent_name}: ${step.description}`;
+      }).join('\n') || 'No workflow provided.';
+
+      const aiMessage = {
+        id: Date.now() + 1,
+        text: `✅ Ticket submitted successfully!\n\n📋 **Planned Workflow:**\n${workflowSteps}`,
+        sender: 'ai',
+        timestamp: new Date().toLocaleTimeString(),
+      };
+      
+        setMessages((prev) => [...prev, aiMessage]);
+      } catch (error) {
+        console.error('Backend error:', error);
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 2,
+            text: '❌ Failed to submit your message. Please try again later.',
+            sender: 'ai',
+            timestamp: new Date().toLocaleTimeString(),
+          },
+        ]);
+      } finally {
         setIsTyping(false);
-      }, 1000);
-    }, 1500);
+      }
+  
+
+    return (
+      <div>
+        {/* Render messages + input UI here */}
+      </div>
+    );
   };
+
+
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
