@@ -1,0 +1,56 @@
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
+import os
+from dotenv import load_dotenv
+
+# --- Load Environment Variables ---
+load_dotenv()
+
+# --- Configuration ---
+# Your MongoDB Atlas connection URI
+MONGO_URI = os.getenv("MONGO_URI")
+
+def test_connection():
+    print(f"Attempting to connect to MongoDB Atlas at: {MONGO_URI}")
+    client = None
+    try:
+        # Create a MongoClient instance using the Atlas SRV URI
+        client = MongoClient(MONGO_URI)
+        
+        # The ismaster command is cheap and does not require auth.
+        # It's a quick way to check if the server is alive.
+        client.admin.command('ping')
+        
+        # --- Connect to a specific database ---
+        # For Atlas SRV URIs, the database name might not be in the path.
+        # We'll explicitly select 's3dm_db' as our target database.
+        db = client["s3dm_db"] # Connect to the 's3dm_db' database
+        
+        # Attempt a simple operation like listing collections to test authentication and access
+        print(f"Connected successfully to database: {db.name}")
+        print("Collections in this database:", db.list_collection_names())
+        
+        print("\n--- MongoDB Atlas connection test PASSED! ---")
+        return True
+    except ConnectionFailure as e:
+        print(f"\n--- MongoDB Atlas connection test FAILED! ---")
+        print(f"Error: Could not connect to MongoDB Atlas server.")
+        print(f"Details: {e}")
+        print("\nPossible reasons:")
+        print("1. Network issue or firewall blocking outbound connections (especially to Atlas).")
+        print("2. Incorrect username or password in the URI (Rishi/hellopiggybot).")
+        print("3. IP Whitelisting: Your current IP address is not whitelisted in your MongoDB Atlas project.")
+        print("4. Cluster is not running or accessible.")
+        print("5. URI format issue (less likely if copied directly from Atlas).")
+        return False
+    except Exception as e:
+        print(f"\n--- MongoDB Atlas connection test FAILED unexpectedly! ---")
+        print(f"An unexpected error occurred: {e}")
+        return False
+    finally:
+        if client:
+            client.close()
+            print("MongoDB Atlas connection closed.")
+
+if __name__ == "__main__":
+    test_connection()
