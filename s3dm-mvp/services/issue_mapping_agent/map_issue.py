@@ -23,18 +23,18 @@ def build_exhaustive_prompt(user_message: str, fields: list) -> str:
         "device_type": "Specific device category (smart_light, smart_lock, thermostat, camera, speaker, sensor, hub, switch, outlet, etc.)",
         "severity": "Impact level (critical, high, medium, low)",
         "location": "Physical location (living_room, bedroom, kitchen, etc.)",
-        "model": "Device model number or name",
+        # "model": "Device model number or name",
         "brand": "Manufacturer name",
-        "power_source": "How device is powered (battery, wired, etc.)",
-        "last_working_time": "When it last worked (just_now, yesterday, etc.)",
-        "frequency": "How often issue occurs (always, first_time, etc.)",
-        "user_action_taken": "What user tried to fix it",
-        "connected_devices": "Other devices affected",
-        "firmware_version": "Firmware version",
+        # "power_source": "How device is powered (battery, wired, etc.)",
+        # "last_working_time": "When it last worked (just_now, yesterday, etc.)",
+        # "frequency": "How often issue occurs (always, first_time, etc.)",
+        # "user_action_taken": "What user tried to fix it",
+        # "connected_devices": "Other devices affected",
+        # "firmware_version": "Firmware version",
         "error_code": "Any error codes or messages",
         "environmental_conditions": "Environment factors (weather, power outage, etc.)",
-        "recurrence": "Pattern of occurrence",
-        "user_expertise_level": "Technical skill level implied (beginner, intermediate, advanced)"
+        # "recurrence": "Pattern of occurrence",
+        # "user_expertise_level": "Technical skill level implied (beginner, intermediate, advanced)"
     }
 
     field_list = "\n".join([f"- {field}: {field_descriptions.get(field, '')}" for field in fields])
@@ -88,10 +88,8 @@ def call_groq_llm_sync(prompt: str) -> str:
 # --- Main Function ---
 def map_issue(user_message: str) -> dict:
     fields = [
-        "issue_type", "device_type", "severity", "location", "model", "brand",
-        "power_source", "last_working_time", "frequency", "user_action_taken",
-        "connected_devices", "firmware_version", "error_code", 
-        "environmental_conditions", "recurrence", "user_expertise_level"
+        "issue_type", "device_type", "severity", "location", "brand",
+        "error_code", "environmental_conditions"
     ]
 
     prompt = build_exhaustive_prompt(user_message, fields)

@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from services.issue_mapping_agent.map_issue import map_issue
-from services.gars.main import query_agents
+from services.gars.gars_core import query_agents
 from typing import List, Optional, Dict, Any
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
@@ -173,5 +173,5 @@ def run_rsps_tests_sync():
     finally:
         close_mongo_db_connection()
 
-if __name__ == "__main__":
-    run_rsps_tests_sync()
+# if __name__ == "__main__":
+#     run_rsps_tests_sync()
